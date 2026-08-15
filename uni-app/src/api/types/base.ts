@@ -1,0 +1,30 @@
+export interface ApiResponse<T = unknown> {
+  code: number
+  message: string
+  data: T
+}
+
+export const ErrorCodes = {
+  SUCCESS: 0,
+  SERVER_ERROR: -1,
+  INVALID_PHONE: 1,
+  INVALID_CODE: 2,
+  INVALID_PASSWORD: 3,
+  CAPTCHA_FAILED: 4,
+  INVALID_EMAIL: 5,
+  USER_NOT_FOUND: 10,
+  USER_EXISTS: 11,
+  PASSWORD_NOT_SET: 12,
+  PASSWORD_ALREADY_SET: 13,
+  WRONG_PASSWORD: 14,
+  CODE_EXPIRED: 15,
+  ACCOUNT_LOCKED: 16,
+  WX_LOGIN_FAILED: 20,
+  WX_PHONE_FAILED: 21,
+  WX_API_ERROR: 22,
+  PARAM_MISSING: 23,
+  RATE_LIMIT: 30,
+  SEND_LIMIT: 31,
+  NEED_BIND_EMAIL: 40,
+  UNAUTHORIZED: 401,
+} as const

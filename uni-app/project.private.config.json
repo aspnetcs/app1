@@ -1,0 +1,15 @@
+{
+  "miniprogramRoot": "./dist/build/mp-weixin/",
+  "libVersion": "3.15.1",
+  "projectname": "uni-app",
+  "setting": {
+    "urlCheck": false,
+    "coverView": true,
+    "lazyloadPlaceholderEnable": false,
+    "skylineRenderEnable": false,
+    "preloadBackgroundData": false,
+    "autoAudits": false,
+    "showShadowRootInWxmlPanel": true,
+    "compileHotReLoad": true
+  }
+}

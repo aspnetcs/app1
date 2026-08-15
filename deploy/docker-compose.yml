@@ -1,0 +1,148 @@
+services:
+  # ============================================================
+  # Infrastructure
+  # ============================================================
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: ai-app-postgres
+    environment:
+      POSTGRES_DB: webchat
+      POSTGRES_USER: webchat
+      POSTGRES_PASSWORD: webchat_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U webchat -d webchat"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    container_name: ai-app-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  minio:
+    image: minio/minio:latest
+    container_name: ai-app-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # ============================================================
+  # Backend — platform-api (port 8080)
+  # ============================================================
+  platform-api:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    image: webchat-backend:latest
+    container_name: ai-app-platform-api
+    command: ["/app/platform-api.jar"]
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/webchat
+      SPRING_DATASOURCE_USERNAME: webchat
+      SPRING_DATASOURCE_PASSWORD: webchat_dev_password
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: "6379"
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_PUBLIC_ENDPOINT: http://localhost:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin123
+      MINIO_BUCKET: webchat
+      JWT_SECRET: change-this-jwt-secret-in-production
+      AI_MASTER_KEY: change-this-ai-master-key-in-production
+      JAVA_OPTS: "-Xms256m -Xmx768m"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  # ============================================================
+  # Backend — admin-api (port 8081)
+  # Same image, different jar
+  # ============================================================
+  admin-api:
+    image: webchat-backend:latest
+    container_name: ai-app-admin-api
+    command: ["/app/admin-api.jar"]
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/webchat
+      SPRING_DATASOURCE_USERNAME: webchat
+      SPRING_DATASOURCE_PASSWORD: webchat_dev_password
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: "6379"
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_PUBLIC_ENDPOINT: http://localhost:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin123
+      MINIO_BUCKET: webchat
+      JWT_SECRET: change-this-jwt-secret-in-production
+      AI_MASTER_KEY: change-this-ai-master-key-in-production
+      JAVA_OPTS: "-Xms256m -Xmx512m"
+    depends_on:
+      platform-api:
+        condition: service_started
+
+  # ============================================================
+  # Frontend — admin-lite (React admin panel, port 5175)
+  # ============================================================
+  admin-lite:
+    build:
+      context: ../admin-lite
+      dockerfile: Dockerfile
+    image: webchat-admin-lite:latest
+    container_name: ai-app-admin-lite
+    ports:
+      - "5175:80"
+    depends_on:
+      admin-api:
+        condition: service_started
+
+  # ============================================================
+  # Frontend — uni-app H5 (user-facing web app, port 5180)
+  # ============================================================
+  uni-app-h5:
+    build:
+      context: ../uni-app
+      dockerfile: Dockerfile
+    image: webchat-uni-app-h5:latest
+    container_name: ai-app-uni-app-h5
+    ports:
+      - "5180:80"
+    depends_on:
+      platform-api:
+        condition: service_started
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:

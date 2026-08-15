@@ -1,0 +1,62 @@
+package com.webchat.platformapi.ai.channel;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
+
+public interface AiChannelKeyRepository extends JpaRepository<AiChannelKeyEntity, Long> {
+
+    List<AiChannelKeyEntity> findByChannel_IdOrderByIdAsc(Long channelId);
+
+    List<AiChannelKeyEntity> findByChannel_IdAndEnabledTrueAndStatusOrderByIdAsc(Long channelId, int status);
+
+    Optional<AiChannelKeyEntity> findFirstByChannel_IdAndKeyHash(Long channelId, String keyHash);
+
+    boolean existsByChannel_IdAndEnabledTrueAndStatus(Long channelId, int status);
+
+    @Modifying
+    @Transactional
+    @Query(value = """
+            UPDATE ai_channel_key
+            SET success_count = success_count + 1,
+                consecutive_failures = 0,
+                last_success_at = NOW(),
+                status = CASE WHEN status = 3 THEN 1 ELSE status END,
+                updated_at = NOW()
+            WHERE id = :id
+            """, nativeQuery = true)
+    int markSuccess(@Param("id") long id);
+
+    @Modifying
+    @Transactional
+    @Query(value = """
+            UPDATE ai_channel_key
+            SET fail_count = fail_count + 1,
+                consecutive_failures = consecutive_failures + 1,
+                last_fail_at = NOW(),
+                status = CASE
+                    WHEN status = 1 AND (consecutive_failures + 1) >= :disableAfter THEN 3
+                    ELSE status
+                END,
+                updated_at = NOW()
+            WHERE id = :id
+            """, nativeQuery = true)
+    int markFailure(@Param("id") long id, @Param("disableAfter") int disableAfter);
+
+    @Query(value = """
+            SELECT *
+            FROM ai_channel_key
+            WHERE enabled = TRUE
+              AND status = 3
+              AND (last_fail_at IS NULL OR last_fail_at < :cutoff)
+            ORDER BY last_fail_at NULLS FIRST
+            LIMIT :limit
+            """, nativeQuery = true)
+    List<AiChannelKeyEntity> findAutoDisabledReadyToProbe(@Param("cutoff") Instant cutoff, @Param("limit") int limit);
+}

@@ -1,0 +1,78 @@
+﻿{
+  "name": "webchat-uni-app",
+  "appid": "__UNI__WEBCHAT",
+  "description": "AI 智能助手 - 多平�?,
+  "versionName": "1.0.0",
+  "versionCode": "100",
+  "transformPx": false,
+  "app-plus": {
+    "usingComponents": true,
+    "nvueCompiler": "uni-app",
+    "nvueStyleCompiler": "uni-app",
+    "splashscreen": {
+      "alwaysShowBeforeRender": true,
+      "autoclose": true,
+      "waiting": true
+    },
+    "modules": {},
+    "distribute": {
+      "android": {
+        "permissions": [
+          "<uses-permission android:name=\"android.permission.INTERNET\"/>",
+          "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\"/>",
+          "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
+          "<uses-permission android:name=\"android.permission.CAMERA\"/>",
+          "<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>"
+        ]
+      },
+      "ios": {
+        "idfa": false,
+        "capabilities": {
+          "entitlements": {
+            "com.apple.developer.associated-domains": []
+          }
+        },
+        "privacyDescription": {
+          "NSCameraUsageDescription": "用于拍摄照片和视频，支持AI识别与对话功�?,
+          "NSMicrophoneUsageDescription": "用于语音对话和录音功�?,
+          "NSPhotoLibraryUsageDescription": "用于选择和保存图片附�?,
+          "NSPhotoLibraryAddUsageDescription": "用于保存AI生成的图�?
+        },
+        "UIBackgroundModes": ["audio"],
+        "urltypes": [
+          {
+            "urlschemes": ["webchat"]
+          }
+        ]
+      }
+    }
+  },
+  "mp-weixin": {
+    "appid": "wx69a4a33ce06a2b37",
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "enhance": true,
+      "postcss": true,
+      "minified": true
+    },
+    "usingComponents": true,
+    "lazyCodeLoading": "requiredComponents",
+    "preloadRule": {
+      "pages/index/index": {
+        "network": "all",
+        "packages": ["chat", "market", "research"]
+      }
+    }
+  },
+  "h5": {
+    "devServer": {
+      "port": 5173,
+      "disableHostCheck": true
+    },
+    "title": "AI 助手",
+    "router": {
+      "mode": "hash"
+    }
+  }
+}

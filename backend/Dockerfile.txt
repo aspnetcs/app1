@@ -1,0 +1,71 @@
+# ============================================================
+# Backend Dockerfile — Spring Boot 3.2.5 / Java 17 / Maven
+# Builds both platform-api (port 8080) and admin-api (port 8081)
+# ============================================================
+
+# ---------- Build Stage ----------
+FROM maven:3.9-eclipse-temurin-17 AS builder
+
+# Aliyun Maven mirror — speeds up dependency download in China
+RUN mkdir -p /root/.m2 && cat > /root/.m2/settings.xml <<'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd">
+  <mirrors>
+    <mirror>
+      <id>aliyunmaven</id>
+      <mirrorOf>central</mirrorOf>
+      <name>Aliyun Maven Central Mirror</name>
+      <url>https://maven.aliyun.com/repository/central</url>
+    </mirror>
+    <mirror>
+      <id>aliyun-spring</id>
+      <mirrorOf>spring</mirrorOf>
+      <name>Aliyun Spring Mirror</name>
+      <url>https://maven.aliyun.com/repository/spring</url>
+    </mirror>
+  </mirrors>
+</settings>
+EOF
+
+WORKDIR /build
+
+# Copy all pom.xml first — enables Docker layer caching for dependencies
+COPY pom.xml ./
+COPY common/pom.xml common/
+COPY platform-api/pom.xml platform-api/
+COPY admin-api/pom.xml admin-api/
+
+# Pre-download dependencies (best-effort; won't fail the build if some are unresolved)
+RUN mvn -B dependency:go-offline -DskipTests || true
+
+# Copy source code
+COPY common/src common/src/
+COPY platform-api/src platform-api/src/
+COPY admin-api/src admin-api/src/
+
+# Build all modules, skip tests for faster image build
+RUN mvn -B package -DskipTests
+
+# ---------- Runtime Stage ----------
+FROM eclipse-temurin:17-jre
+
+LABEL maintainer="webchat-team"
+LABEL description="WebChat backend — platform-api & admin-api"
+
+WORKDIR /app
+
+# Copy both executable jars from build stage
+COPY --from=builder /build/platform-api/target/platform-api-*.jar /app/platform-api.jar
+COPY --from=builder /build/admin-api/target/admin-api-*.jar /app/admin-api.jar
+
+# JVM tuning — can be overridden via JAVA_OPTS env var
+ENV JAVA_OPTS="-Xms256m -Xmx512m"
+
+# Default: run platform-api.
+# To run admin-api instead, override the command:
+#   docker run ... <image> /app/admin-api.jar
+#   or in docker-compose:  command: ["/app/admin-api.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar $0", "--"]
+CMD ["/app/platform-api.jar"]

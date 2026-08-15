@@ -1,0 +1,141 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/onboarding/onboarding",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/translation/translation",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/account/account",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "设置"
+      }
+    },
+    {
+      "path": "pages/agent-runs/detail",
+      "style": {
+        "navigationBarTitleText": "任务详情"
+      }
+    },
+    {
+      "path": "pages/agent-runs/index",
+      "style": {
+        "navigationBarTitleText": "任务运行"
+      }
+    },
+    {
+      "path": "pages/agreement/agreement",
+      "style": {
+        "navigationBarTitleText": "用户协议"
+      }
+    },
+    {
+      "path": "pages/privacy/privacy",
+      "style": {
+        "navigationBarTitleText": "隐私政策"
+      }
+    }
+  ],
+  "subPackages": [
+    {
+      "root": "chat",
+      "pages": [
+        {
+          "path": "pages/index/index",
+          "style": {
+            "navigationStyle": "custom",
+            "navigationBarTitleText": ""
+          }
+        },
+        {
+          "path": "pages/history/history",
+          "style": {
+            "navigationBarTitleText": "对话历史"
+          }
+        }
+      ]
+    },
+    {
+      "root": "market",
+      "pages": [
+        {
+          "path": "pages/index/index",
+          "style": {
+            "navigationBarTitleText": "市场"
+          }
+        }
+      ]
+    },
+    {
+      "root": "research",
+      "pages": [
+        {
+          "path": "pages/index/index",
+          "style": {
+            "navigationStyle": "custom",
+            "navigationBarTitleText": ""
+          }
+        },
+        {
+          "path": "pages/detail/detail",
+          "style": {
+            "navigationStyle": "custom",
+            "navigationBarTitleText": ""
+          }
+        },
+        {
+          "path": "pages/literature/literature",
+          "style": {
+            "navigationStyle": "custom",
+            "navigationBarTitleText": ""
+          }
+        }
+      ]
+    }
+  ],
+  "globalStyle": {
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundColor": "#F5F5F5",
+    "backgroundTextStyle": "dark"
+  },
+  "easycom": {
+    "autoscan": true
+  },
+  "condition": {
+    "current": 0,
+    "list": [
+      {
+        "name": "聊天",
+        "path": "chat/pages/index/index"
+      },
+      {
+        "name": "历史",
+        "path": "chat/pages/history/history"
+      },
+      {
+        "name": "翻译",
+        "path": "pages/translation/translation"
+      }
+    ]
+  }
+}

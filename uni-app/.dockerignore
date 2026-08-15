@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.log
+.idea/
+.vscode/
+.hbuilderx/
+.env
+.env.local
+build-app.log
+build-h5.log
+build-mp-weixin.log
+h5-serve.log

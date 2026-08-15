@@ -1,0 +1,115 @@
+server:
+  port: 8081
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  application:
+    name: admin-api
+  config:
+    import: optional:file:../../deploy/.env[.properties],optional:file:deploy/.env[.properties]
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/webchat}
+    username: ${SPRING_DATASOURCE_USERNAME:webchat}
+    password: ${SPRING_DATASOURCE_PASSWORD:webchat_dev_password}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      repositories:
+        enabled: false
+
+jwt:
+  secret: ${JWT_SECRET:local-dev-jwt-secret-change-before-production-20260323}
+
+minio:
+  endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
+  public-endpoint: ${MINIO_PUBLIC_ENDPOINT:${MINIO_ENDPOINT:http://localhost:9000}}
+  access-key: ${MINIO_ACCESS_KEY:${MINIO_ROOT_USER:minioadmin}}
+  secret-key: ${MINIO_SECRET_KEY:${MINIO_ROOT_PASSWORD:minioadmin123}}
+  bucket: ${MINIO_BUCKET:webchat}
+
+# Admin process should always expose admin panel features.
+platform:
+  dev-panel: ${DEV_PANEL:true}
+  trace:
+    enabled: ${TRACE_ENABLED:false}
+  skill-library:
+    enabled: ${SKILL_LIBRARY_ENABLED:true}
+    root-dir: ${SKILL_LIBRARY_ROOT_DIR:}
+  conversation-pin-star:
+    enabled: ${CONVERSATION_PIN_STAR_ENABLED:true}
+  conversation-management:
+    enabled: ${CONVERSATION_MANAGEMENT_ENABLED:true}
+  multi-chat:
+    enabled: ${MULTI_CHAT_ENABLED:false}
+    max-models: ${MULTI_CHAT_MAX_MODELS:3}
+    multi-agent-discussion:
+      enabled: ${MULTI_AGENT_DISCUSSION_ENABLED:false}
+      max-agents: ${MULTI_AGENT_DISCUSSION_MAX_AGENTS:4}
+      max-rounds: ${MULTI_AGENT_DISCUSSION_MAX_ROUNDS:20}
+  role-policy:
+    policies:
+      guest:
+        allowed-models: ${ROLE_GUEST_ALLOWED_MODELS:}
+        rate-limit-per-minute: ${ROLE_GUEST_RPM:10}
+        model-rate-limit-per-minute: ${ROLE_GUEST_MODEL_RPM:5}
+        daily-chat-quota: ${ROLE_GUEST_DAILY_QUOTA:20}
+      user:
+        allowed-models: ${ROLE_USER_ALLOWED_MODELS:}
+        rate-limit-per-minute: ${ROLE_USER_RPM:30}
+        model-rate-limit-per-minute: ${ROLE_USER_MODEL_RPM:0}
+        daily-chat-quota: ${ROLE_USER_DAILY_QUOTA:100}
+      premium:
+        allowed-models: ${ROLE_PREMIUM_ALLOWED_MODELS:}
+        rate-limit-per-minute: ${ROLE_PREMIUM_RPM:120}
+        model-rate-limit-per-minute: ${ROLE_PREMIUM_MODEL_RPM:0}
+        daily-chat-quota: ${ROLE_PREMIUM_DAILY_QUOTA:0}
+      admin:
+        allowed-models: ${ROLE_ADMIN_ALLOWED_MODELS:}
+        rate-limit-per-minute: ${ROLE_ADMIN_RPM:999}
+        model-rate-limit-per-minute: ${ROLE_ADMIN_MODEL_RPM:0}
+        daily-chat-quota: ${ROLE_ADMIN_DAILY_QUOTA:0}
+      pending:
+        allowed-models: ${ROLE_PENDING_ALLOWED_MODELS:}
+        rate-limit-per-minute: ${ROLE_PENDING_RPM:0}
+        model-rate-limit-per-minute: ${ROLE_PENDING_MODEL_RPM:0}
+        daily-chat-quota: ${ROLE_PENDING_DAILY_QUOTA:0}
+  research-assistant:
+    enabled: ${RESEARCH_ASSISTANT_ENABLED:false}
+    max-concurrent-pipelines: ${RESEARCH_MAX_PIPELINES:3}
+    stage-timeout-minutes: ${RESEARCH_STAGE_TIMEOUT:30}
+    llm:
+      model: ${RESEARCH_LLM_MODEL:}
+      max-tokens: ${RESEARCH_LLM_MAX_TOKENS:4096}
+      temperature: ${RESEARCH_LLM_TEMPERATURE:0.7}
+    literature:
+      enabled: ${RESEARCH_LITERATURE_ENABLED:true}
+      sources: ${RESEARCH_LITERATURE_SOURCES:openalex,semantic_scholar,arxiv}
+      s2-api-key: ${RESEARCH_S2_API_KEY:}
+      max-results-per-source: ${RESEARCH_LITERATURE_MAX_RESULTS:20}
+      cache-ttl-hours: ${RESEARCH_LITERATURE_CACHE_TTL:24}
+    experiment:
+      enabled: ${RESEARCH_EXPERIMENT_ENABLED:false}
+      mode: ${RESEARCH_EXPERIMENT_MODE:simulated}
+      time-budget-sec: ${RESEARCH_EXPERIMENT_TIME_BUDGET:300}
+    paper:
+      enabled: ${RESEARCH_PAPER_ENABLED:false}
+      max-iterations: ${RESEARCH_PAPER_MAX_ITERATIONS:3}
+      quality-threshold: ${RESEARCH_PAPER_QUALITY_THRESHOLD:7.0}
+
+ai:
+  master-key: ${AI_MASTER_KEY:local-dev-master-key-change-in-production}
+  ssrf:
+    allowlist: ${AI_SSRF_ALLOWLIST:*}
+    allow-private: ${AI_SSRF_ALLOW_PRIVATE:false}
+    allow-http: ${AI_SSRF_ALLOW_HTTP:true}
+    allow-http-localhost: ${AI_SSRF_ALLOW_HTTP_LOCALHOST:true}
+

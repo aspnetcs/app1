@@ -1,0 +1,17 @@
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\auth\group\UserGroupServiceTest.java
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\ai\extension\FunctionCallingServiceTest.java
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\research\entity\ResearchStageLogEntityTest.java
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\skill\LocalSkillDiscoveryServiceTest.java
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\auth\oauth\OAuthConfigSupportTest.java
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\ai\channel\ChannelRouterTest.java
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\ai\extension\ToolRuntimeConfigServiceTest.java
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\ai\extension\UserMcpToolAccessServiceTest.java
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\market\MarketCatalogServiceTest.java
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\ai\adapter\openai\OpenAiAdapterTest.java
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\auth\oauth\OAuthRateLimitSupportTest.java
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\ai\model\AiModelMetadataServiceTest.java
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\credits\CreditsAccountServiceTest.java
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\file\FileKindTest.java
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\file\FileLibraryServiceTest.java
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\research\entity\ResearchRunEntityTest.java
+E:\26-27-1\wyc\app1\backend\common\src\test\java\com\webchat\platformapi\agent\AgentServiceTest.java
